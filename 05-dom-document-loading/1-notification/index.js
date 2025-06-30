@@ -49,5 +49,6 @@ export default class NotificationMessage {
     }
     destroy() {
         this.remove();
+        clearTimeout(this.timerId)
     }
 }
