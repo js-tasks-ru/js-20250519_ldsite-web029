@@ -86,6 +86,7 @@ describe('async-code-fetch-api-part-1/sortable-table-v3', () => {
 
     await sortableTable.render();
 
+
     const { body } = sortableTable.subElements;
 
     expect(body.children.length).toEqual(3);

@@ -1,6 +1,7 @@
 export default class ColumnChart {
     element;
     chartHeight = 50;
+    subElements={};
     constructor({
         data = [],
         label = '',
@@ -15,6 +16,10 @@ export default class ColumnChart {
         this.data = data;
 
         this.element = this.createElement(this.createTemplate());
+        this.subElements = {
+      header: this.element.querySelector(".column-chart__title"),
+      body: this.element.querySelector("[data-element='body']"),
+    };
     }
     createElement(template) {
         const element = document.createElement('div');
@@ -29,7 +34,15 @@ export default class ColumnChart {
 
     }
     getColumnProps() {
+        if (!this.data || this.data.length === 0) {
+            return [];
+        }
+        if (!Array.isArray(this.data)) {
+            this.data = Object.values(this.data);
+        }
+
         const maxValue = Math.max(...this.data);
+
         const scale = 50 / maxValue;
         return this.data.map(item => {
             return {
@@ -45,10 +58,10 @@ export default class ColumnChart {
 
     }
     createChartClasses() {
-        return this.data.length ? 'column-chart' : 'column-chart column-chart_loading';
+        const data = Array.isArray(this.data) ? this.data : Object.values(this.data);
+        return data.length ? 'column-chart' : 'column-chart column-chart_loading';
     }
     createTemplate() {
-
         return (`
                 <div class="${this.createChartClasses()}" style="--chart-height: 50">
                       <div class="column-chart__title">
@@ -66,7 +79,7 @@ export default class ColumnChart {
     }
     update(newData) {
         this.data = newData;
-        this.element.querySelector('[data-element="body"]').innerHTML = this.createChartBodyTemplate();
+        this.subElements.body.innerHTML = this.createChartBodyTemplate();
     }
     remove() {
         this.element.remove();
